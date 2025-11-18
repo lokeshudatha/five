@@ -1,42 +1,49 @@
 pipeline {  
     agent any  
+
     environment {  
         DOCKERHUB_CREDENTIALS = credentials('docker-creds')
     }  
+
     stages {  
-        stage('checkout') {  
+
+        stage('Checkout Code') {  
             steps {  
-                echo "*********** cloning the code **********"  
+                echo "*********** Cloning the code **********"  
                 sh 'rm -rf five || true'  
                 sh 'git clone https://github.com/lokeshudatha/five.git' 
             }  
         }
-         stage('Docker image build') {  
+
+        stage('Docker Image Build') {  
             steps {  
-                echo "********** building is done ************"  
+                echo "********** Building Docker image ************"  
                 dir('five') {  
                     sh 'docker build -t p:v .'  
                 }  
             }  
         }
-        stage('Docker image build') {  
+
+        stage('Docker Image Tag') {  
             steps {  
-                echo "********** building is done ************"  
+                echo "********** Tagging Docker image ************"  
                 dir('five') {  
                     sh 'docker tag p:v 9515524259/python:v1'  
                 }  
             }  
         }
-          stage('Push to Docker Hub') {  
+
+        stage('Push to Docker Hub') {  
             steps {  
+                echo "********** Pushing image to Docker Hub ************"
                 sh """  
-                docker login -u ${DOCKERHUB_CREDENTIALS_USR} -p ${DOCKERHUB_CREDENTIALS_PSW}  
-                docker push 9515524259/python:v1 
+                    docker login -u ${DOCKERHUB_CREDENTIALS_USR} -p ${DOCKERHUB_CREDENTIALS_PSW}  
+                    docker push 9515524259/python:v1 
                 """  
             }  
         }
-        
-        stage('vm creation using Terraform') {
+
+        stage('VM Creation using Terraform') {
             steps {
                 echo "********** VM creation is done ************"
                 dir('/var/lib/jenkins/workspace/five') {
@@ -46,11 +53,16 @@ pipeline {
                 }
             }
         }
-        stage('Ansible deployment') {
+
+        stage('Ansible Deployment') {
             steps {
                 echo "********** Ansible deployment is done ************"
                 dir('/var/lib/jenkins/workspace/five') {
-                    sh 'ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i /var/lib/jenkins/workspace/ip.txt playbook.yaml --private-key=/var/lib/jenkins/.ssh/id_ed25519 '
+                    sh '''
+                        ANSIBLE_HOST_KEY_CHECKING=False \
+                        ansible-playbook -i /var/lib/jenkins/workspace/ip.txt \
+                        play.yaml --private-key=/var/lib/jenkins/.ssh/id_ed25519
+                    '''
                 }
             }
         }
