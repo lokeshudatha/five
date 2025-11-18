@@ -19,7 +19,7 @@ resource "google_compute_instance" "python" {
     access_config {}
   }
   metadata = {
-    ssh-keys = "udathalokesh:${file("/var/lib/jenkins/.ssh/id_ed25519.pub")}"
+    ssh-keys = "udathalokesh:${file("/var/lib/jenkins/.ssh/id_ed25519.pub.")}"
   }
 
   metadata_startup_script = <<-EOF
@@ -31,10 +31,11 @@ resource "google_compute_instance" "python" {
     sudo usermod -aG docker udathalokesh11
     sudo chmod 666 /var/run/docker.sock
     sudo systemctl restart docker
-    docker build -t pythonlokesh:latest .
+    docker build -t p:v .
     echo $DOCKERHUB_PSW | docker login -u $DOCKERHUB_USR --password-stdin
-    docker tag pythonlokesh:latest 9515524259/pythonudatha:v1
-    docker push 9515524259/pythonudatha:v1
+    docker tag p:v 9515524259/python:v1
+    docker push 9515524259/python:v1
+    docker pull 9515524259/python:v1
   EOF
 }
 resource "local_file" "file1" {
