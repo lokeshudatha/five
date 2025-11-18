@@ -6,6 +6,10 @@
       apt:
         update_cache: yes
         cache_valid_time: 3600
+    - name: Pull Flask image from DockerHub
+      docker_image:
+        name: 9515524259/python:v1
+        source: pull
     - name: Run Flask container
       docker_container:
         name: flaskapp
