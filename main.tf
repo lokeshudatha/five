@@ -19,7 +19,7 @@ resource "google_compute_instance" "python" {
     access_config {}
   }
   metadata = {
-    ssh-keys = "udathalokesh:${file("/var/lib/jenkins/.ssh/id_ed25519.pub")}"
+    ssh-keys = "udathalokesh11:${file("/var/lib/jenkins/.ssh/id_ed25519.pub")}"
   }
 
   metadata_startup_script = <<-EOF
