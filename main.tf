@@ -39,6 +39,6 @@ resource "google_compute_instance" "python" {
   EOF
 }
 resource "local_file" "file1" {
-  content  = "udathalokesh@${google_compute_instance.python.network_interface[0].access_config[0].nat_ip}"
+  content  = "udathalokesh11@${google_compute_instance.python.network_interface[0].access_config[0].nat_ip}"
   filename = "/var/lib/jenkins/workspace/ip.txt"
 }
