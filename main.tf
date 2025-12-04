@@ -1,6 +1,5 @@
 provider "google" {
   project     = "winter-monolith-477705-m8"
-  credentials = file("loki.json")
   region      = "us-central1"
 }
 
