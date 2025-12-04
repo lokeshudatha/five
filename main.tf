@@ -1,0 +1,51 @@
+provider "google" {
+  project     = "winter-monolith-477705-m8"
+  credentials = file("loki.json")
+  region      = "us-central1"
+}
+
+# VM
+resource "google_compute_instance" "loki" {
+  name         = "lokesh-udatha"
+  zone         = "us-central1-a"
+  machine_type = "e2-small"
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-12"
+    }
+  }
+
+  network_interface {
+    subnetwork   = google_compute_subnetwork.lokisubnetwork.id
+    access_config {}
+  }
+}
+
+# VPC
+resource "google_compute_network" "lokinetwork" {
+  name                    = "lokesh-network"
+  auto_create_subnetworks = false 
+}
+
+# Subnet
+resource "google_compute_subnetwork" "lokisubnetwork" {
+  name          = "lokesh-subnetwork"
+  network       = google_compute_network.lokinetwork.id
+  region        = "us-central1"
+  ip_cidr_range = "10.0.0.0/22"
+}
+
+# Firewall
+resource "google_compute_firewall" "lokifirewall" {
+  name    = "lokesh-firewall"
+  network = google_compute_network.lokinetwork.id
+
+  direction = "INGRESS"
+
+  allow {
+    protocol = "all"
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+}
