@@ -50,5 +50,8 @@ resource "google_compute_firewall" "lokifirewall" {
 
   source_ranges = ["0.0.0.0/0"]
 }
+resource "google_compute_network" "ud" {
+  name = "udatha"
+}
 
 
