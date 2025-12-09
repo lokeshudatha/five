@@ -6,6 +6,6 @@ metadata:
 spec:
   containers:
     - name: lokesh-container
-      image: docker.io/lokeshudatha/python:v2
+      image: docker.io/lokeshudatha/python:v5
       ports:
         - containerPort: 5000
