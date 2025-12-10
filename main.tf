@@ -1,4 +1,3 @@
-
 provider "google" {
   project     = "winter-monolith-477705-m8"
   region      = "us-central1"
@@ -35,6 +34,16 @@ resource "google_compute_instance" "loki" {
   depends_on = [
     google_compute_subnetwork.lokisubnetwork
   ]
+  metadata_startup_script = <<-EOT
+  sudo apt update -y
+  sudo apt install docker.io -y
+  sudo systemctl start docker
+  sudo systemctl enable docker
+  sudo git clone https://github.com/lokeshudatha/four
+  sudo docker build -t udatha:v11 .
+  sudo tag udatha:v11 lokeshudatha/udatha:v2
+  EOT
+
 }
 
 resource "google_compute_firewall" "lokifirewall" {
@@ -48,9 +57,6 @@ resource "google_compute_firewall" "lokifirewall" {
   }
 
   source_ranges = ["0.0.0.0/0"]
-}
-output "vm_ip" {
-  value = google_compute_instance.loki.network_interface[0].access_config[0].nat_ip
 }
 
 
