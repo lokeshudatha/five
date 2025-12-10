@@ -1,11 +1,11 @@
 provider "google" {
-  project = "winter-monolith-477705-m8"
-  region  = "us-central1"
+  project     = "winter-monolith-477705-m8"
+  region      = "us-central1"
 }
 
 resource "google_compute_network" "lokinetwork" {
   name                    = "lokesh-network"
-  auto_create_subnetworks = false
+  auto_create_subnetworks = false 
 }
 
 resource "google_compute_subnetwork" "lokisubnetwork" {
@@ -31,49 +31,29 @@ resource "google_compute_instance" "loki" {
     access_config {}
   }
 
-  metadata = {
-    ssh-keys = "udathalokesh11:${file("/home/lokesh/.ssh/id_rsa.pub")}"
-  }
+  depends_on = [
+    google_compute_subnetwork.lokisubnetwork
+  ]
+  metadata_startup_script = <<-EOF
+    #!/bin/bash
+    apt update -y
+    apt install -y docker.io git
+    systemctl start docker
+    systemctl enable docker
 
-  # Upload project files (Dockerfile etc.)
-  provisioner "file" {
-    source      = "./app"  # Your local folder that contains Dockerfile
-    destination = "/home/udathalokesh11/app"
+    # Clone your repository
+    git clone https://github.com/lokeshudatha/four /opt/four
 
-    connection {
-      type        = "ssh"
-      user        = "udathalokesh11"
-      private_key = file("/home/lokesh/.ssh/id_rsa")
-      host        = self.network_interface[0].access_config[0].nat_ip
-    }
-  }
-
-  # Install docker + build + push image
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update -y",
-      "sudo apt-get install -y docker.io",
-      "sudo systemctl start docker",
-      "sudo usermod -aG docker udathalokesh11",
-      "cd /home/udathalokesh11/app",
-      "docker build -t python_img:latest .",
-      "echo $DOCKERHUB_PSW | docker login -u $DOCKERHUB_USR --password-stdin",
-      "docker tag python_img:latest lokeshudatha/python:v1",
-      "docker push lokeshudatha/python:v1"
-    ]
-
-    connection {
-      type        = "ssh"
-      user        = "udathalokesh11"
-      private_key = file("/home/lokesh/.ssh/id_rsa")
-      host        = self.network_interface[0].access_config[0].nat_ip
-    }
-  }
+    # Build Docker Image
+    cd /opt/four
+    docker build -t  four-image:latest .
+  EOF
 }
-
 resource "google_compute_firewall" "lokifirewall" {
   name    = "lokesh-firewall"
   network = google_compute_network.lokinetwork.id
+
+  direction = "INGRESS"
 
   allow {
     protocol = "all"
@@ -81,3 +61,5 @@ resource "google_compute_firewall" "lokifirewall" {
 
   source_ranges = ["0.0.0.0/0"]
 }
+
+
