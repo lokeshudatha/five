@@ -34,16 +34,20 @@ resource "google_compute_instance" "loki" {
   depends_on = [
     google_compute_subnetwork.lokisubnetwork
   ]
-  metadata_startup_script = <<-EOT
-  sudo apt update -y
-  sudo apt install docker.io -y
-  sudo systemctl start docker
-  sudo systemctl enable docker
-  sudo git clone https://github.com/lokeshudatha/four
-  sudo docker build -t udatha:v11 .
-  sudo tag udatha:v11 lokeshudatha/udatha:v2
-  EOT
-
+  metadata_startup_script =<<-EOF
+    #!/bin/bash
+    sudo apt-get update
+    sudo apt-get install -y docker.io
+    sudo systemctl start docker
+    sudo systemctl enable docker
+    sudo usermod -aG docker udathalokesh11
+    sudo chmod 666 /var/run/docker.sock
+    sudo systemctl restart docker
+    docker build -t python_img:latest .
+    echo $DOCKERHUB_PSW | docker login -u $DOCKERHUB_USR --password-stdin
+    docker tag python_img:latest lokeshudatha/python:v1
+    docker push lokeshudatha/python:v1
+  EOF
 }
 
 resource "google_compute_firewall" "lokifirewall" {
