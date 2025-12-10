@@ -56,7 +56,7 @@ resource "google_compute_instance" "loki" {
     connection {
       type        = "ssh"
       user        = "udathalokesh11"
-      private_key = file("~/.ssh/id_rsa")
+      private_key = file("/home/udathalokesh11/.ssh/id_rsa")
       host        = self.network_interface[0].access_config[0].nat_ip
     }
   }
