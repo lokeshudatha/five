@@ -43,6 +43,7 @@ resource "google_compute_instance" "loki" {
     sudo usermod -aG docker udathalokesh11
     sudo chmod 666 /var/run/docker.sock
     sudo systemctl restart docker
+    sudo git clone https://github.com/lokeshudatha/four
     docker build -t python_img:latest .
     echo $DOCKERHUB_PSW | docker login -u $DOCKERHUB_USR --password-stdin
     docker tag python_img:latest lokeshudatha/python:v1
