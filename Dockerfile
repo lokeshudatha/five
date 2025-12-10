@@ -1,17 +1,16 @@
-FROM ubuntu:22.04
+FROM python:3.9-slim
 
-# Install Java & Maven & Git
-RUN apt update -y && \
-    apt install -y openjdk-21-jdk maven git
+# Install git
+RUN apt update && apt install -y git
 
 WORKDIR /app
 
-# Clone the GitHub repo
-RUN git clone https://github.com/Siva825/spring-petclinic.git .
+# Clone repo
+RUN git clone https://github.com/Mohammedirshaq/flask-web-apk.git .
 
-# Build the Spring app
-RUN mvn clean package -DskipTests -Dcheckstyle.skip=true
+# Install Flask
+RUN pip install flask
 
-EXPOSE 8080
+EXPOSE 5000
 
-CMD ["java", "-jar", "/app/target/spring-petclinic-3.5.0-SNAPSHOT.jar"]
+CMD ["python", "app.py"]
