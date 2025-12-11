@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: flask-deploy
-  namespace: harness-delegate-ng
+  namespace: sujith
   labels:
     app: python-app
 spec:
