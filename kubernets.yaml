@@ -1,11 +1,24 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: lokesh-pod
+  name: flask-deploy
   namespace: harness-delegate-ng
+  labels:
+    app: python-app
 spec:
-  containers:
-    - name: lokesh-container
-      image: docker.io/lokeshudatha/python:v5
-      ports:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      imagePullSecrets:
+        - name: gar-connection
+      containers:
+      - name: c23
+        image: us-central1-docker.pkg.dev/winter-monolith-477705-m8/resp/python22
+        ports:
         - containerPort: 5000
