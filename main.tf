@@ -59,7 +59,7 @@ resource "google_compute_firewall" "lokifirewall" {
   source_ranges = ["0.0.0.0/0"]
   
 }
-variable "runtime" {
+variable "lokesh" {
   type = string
 }
 
