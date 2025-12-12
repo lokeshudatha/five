@@ -15,7 +15,7 @@ resource "google_compute_network" "lokinetwork" {
 # Subnetwork
 # -----------------------------
 resource "google_compute_subnetwork" "lokisubnetwork" {
-  name          = "lokesh-subnetwork"
+  name          = var.runtime
   network       = google_compute_network.lokinetwork.id
   region        = "us-central1"
   ip_cidr_range = "10.0.0.0/22"
@@ -58,5 +58,8 @@ resource "google_compute_firewall" "lokifirewall" {
 
   source_ranges = ["0.0.0.0/0"]
   
+}
+variable "runtime" {
+  type = string
 }
 
