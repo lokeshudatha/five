@@ -15,7 +15,7 @@ resource "google_compute_network" "lokinetwork" {
 # Subnetwork
 # -----------------------------
 resource "google_compute_subnetwork" "lokisubnetwork" {
-  name          = var.lokesh
+  name          = "lokesh-subnetwork"
   network       = google_compute_network.lokinetwork.id
   region        = "us-central1"
   ip_cidr_range = "10.0.0.0/22"
@@ -25,7 +25,7 @@ resource "google_compute_subnetwork" "lokisubnetwork" {
 # VM Instance
 # -----------------------------
 resource "google_compute_instance" "loki" {
-  name         = "lokesh-udatha"
+  name         = var.lokesh
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
