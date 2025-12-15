@@ -1,7 +1,7 @@
 FROM ubuntu:22.04 AS lokesh
 RUN apt-get update && apt-get install -y openjdk-17-jdk maven git
 WORKDIR /app 
-RUN git clone https://github.com/Siva825/spring-petclinic.git .
+RUN git clone https://github.com/spring-projects/spring-petclinic.git .
 RUN mvn clean package -DskipTests -Dcheckstyle.skip=true
 
 
