@@ -1,4 +1,4 @@
-FROM AS lokesh
+FROM ubuntu:22.04 AS lokesh
 RUN apt-get update && apt-get install -y openjdk-17-jdk maven git
 WORKDIR /app 
 RUN git clone https://github.com/spring-projects/spring-petclinic.git .
