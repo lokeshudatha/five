@@ -7,6 +7,6 @@ RUN mvn clean package -DskipTests -Dcheckstyle.skip=true
 
 FROM ubuntu:22.04 
 WORKDIR /app 
-COPY --from=lokesh /app/target/spring-petclinic-3.5.0-SNAPSHOT.jar app.jar
+COPY --from=lokesh /app/target/spring-petclinic-4.0.0-SNAPSHOT.jar app.jar
 EXPOSE 8080 
 CMD ["java", "-jar", "app.jar"]
