@@ -6,7 +6,7 @@ RUN apt update && apt install -y git
 WORKDIR /app
 
 # Clone repo
-RUN git clone https:
+RUN git clone https://github.com/Mohammedirshaq/flask-web-apk.git .
 
 # Install Flask
 RUN pip install flask
